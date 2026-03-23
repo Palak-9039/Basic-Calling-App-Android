@@ -34,22 +34,27 @@ import com.example.basiccallingapp.Viewmodel.CallViewModel
 
 @Composable
 fun DialPadScreen(navController: NavController, viewModel: CallViewModel) {
-    val inputNumber = viewModel.inputNumber // Getting state from ViewModel
+    //collecting the entered number from the viewmodel
+    val phoneNumber = viewModel.phoneNumber
 
+
+    // screen UI
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        // 1. Input Number Display
+        // Input Number Display
         Text(
-            text = inputNumber,
+            text = phoneNumber,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(top = 64.dp),
             maxLines = 1
         )
 
-        // 2. Numeric Keypad
+        // Numeric Keypad
         val keys = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#")
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -59,28 +64,36 @@ fun DialPadScreen(navController: NavController, viewModel: CallViewModel) {
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(keys){ key ->
-                    DialButton(key) { viewModel.onDigitClick(key)}
+                items(keys) { key ->
+                    DialButton(key) { viewModel.onDigitClick(key) }
                 }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // 3. Action Buttons (Call & Backspace)
+            // Action Buttons (Call & Backspace)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(40.dp)
             ) {
                 // Backspace Button
                 IconButton(onClick = { viewModel.onBackspace() }) {
-                    Icon(Icons.Default.Backspace, contentDescription = "Delete", tint = Color.Gray, modifier = Modifier.size(30.dp))
+                    Icon(
+                        Icons.Default.Backspace,
+                        contentDescription = "Delete",
+                        tint = Color.Gray,
+                        modifier = Modifier.size(30.dp)
+                    )
                 }
 
                 // Call Button
                 FloatingActionButton(
                     onClick = {
-                        if (inputNumber.isNotEmpty()) {
+                        if (phoneNumber.isNotEmpty()) {
+                            //starting outgoing call
                             viewModel.StartOutgoingCall()
+
+                            //navigating to the screen
                             navController.navigate(Screen.OutgoingCall.route)
                         }
                     },

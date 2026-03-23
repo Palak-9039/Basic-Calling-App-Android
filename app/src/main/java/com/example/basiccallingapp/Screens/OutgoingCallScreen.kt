@@ -1,5 +1,9 @@
 package com.example.basiccallingapp.Screens
 
+import android.content.Context
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.basiccallingapp.Navigation.Screen
@@ -25,17 +30,42 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun OutgoingCallScreen(navController: NavController, viewModel: CallViewModel) {
-    val dialedNumber = viewModel.inputNumber
+    val dialedNumber = viewModel.phoneNumber
+    val context: Context = LocalContext.current
 
-    // Requirement: Simulate connecting to the call after a delay
+
+    // handeling permissions
+    val callPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                viewModel.initiateRealCall(context)
+            } else {
+                // Handling "Deny" edge case
+                Toast.makeText(context, "Call permission is required to dial", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    )
+
+
+
+
     LaunchedEffect(Unit) {
-        delay(3000) // Wait 3 seconds
-        viewModel.startActiveCall() // Update state to 'Active'
+        delay(1000) // Wait 1 seconds
+
+        viewModel.startActiveCall() // Updating state to 'Active'
+
+        callPermissionLauncher.launch(android.Manifest.permission.CALL_PHONE)
+
         navController.navigate(Screen.ActiveCall.route) {
             popUpTo(Screen.DialPad.route) // Remove 'Outgoing' from the backstack
         }
     }
 
+
+
+    // Screen UI
     Column(
         modifier = Modifier
             .fillMaxSize()

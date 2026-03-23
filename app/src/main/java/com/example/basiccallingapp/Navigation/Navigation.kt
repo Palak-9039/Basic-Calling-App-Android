@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.basiccallingapp.Screens.ActiveCallScreen
 import com.example.basiccallingapp.Screens.DialPadScreen
+import com.example.basiccallingapp.Screens.IncomingCallScreen
 import com.example.basiccallingapp.Screens.OutgoingCallScreen
 import com.example.basiccallingapp.Viewmodel.CallViewModel
 
@@ -35,7 +36,7 @@ fun navigation() {
         }
 
         composable(Screen.IncomingCall.route) {
-
+            IncomingCallScreen(navController, viewmodel)
         }
 
 
