@@ -60,14 +60,14 @@ fun ActiveCallScreen(
                 //only reset if it's returning from a real call
                 if (viewModel.isRealSimCall) {
 
-                    // The user has returned to our app (Call likely ended)
-                    // We stop the timer and clear the data
+                    // The user has returned to the app (Call likely ended)
+                    // stop the timer and clear the data
                     viewModel.stopTimerOnly()
 
                     //to reset the data
                     viewModel.autoResetAfterCall()
 
-                    //Navigating back to DialPad automatically
+                    //Navigating back to DialPad
                     navController.navigate(Screen.DialPad.route) {
                         popUpTo(Screen.DialPad.route){inclusive = true}
                     }

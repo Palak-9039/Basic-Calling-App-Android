@@ -1,5 +1,7 @@
 package com.example.basiccallingapp.Navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -20,7 +22,33 @@ fun navigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.DialPad.route
+        startDestination = Screen.DialPad.route,
+        //adding animation
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        }
+
     ) {
 
         composable(Screen.DialPad.route) {
@@ -35,10 +63,21 @@ fun navigation() {
             ActiveCallScreen(navController, viewmodel)
         }
 
-        composable(Screen.IncomingCall.route) {
+        composable(route = Screen.IncomingCall.route,
+            enterTransition = { // applying animations
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Up,
+                    animationSpec = tween(400)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                    animationSpec = tween(400)
+                )
+            }
+        ) {
             IncomingCallScreen(navController, viewmodel)
         }
-
-
     }
 }
