@@ -1,5 +1,10 @@
 package com.example.basiccallingapp.Screens
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,15 +33,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.example.basiccallingapp.Navigation.Screen
 import com.example.basiccallingapp.Viewmodel.CallViewModel
+
 
 @Composable
 fun DialPadScreen(navController: NavController, viewModel: CallViewModel) {
     //collecting the entered number from the viewmodel
     val phoneNumber = viewModel.phoneNumber
+    val context = LocalContext.current
+
+
+    //handling permission
+    val callPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            viewModel.StartOutgoingCall()
+            navController.navigate(Screen.OutgoingCall.route)
+        } else {
+            Toast.makeText(context, "Permission denied. Cannot place call.", Toast.LENGTH_SHORT).show()
+        }
+    }
 
 
     // screen UI
@@ -91,11 +113,20 @@ fun DialPadScreen(navController: NavController, viewModel: CallViewModel) {
                 FloatingActionButton(
                     onClick = {
                         if (phoneNumber.isNotEmpty()) {
-                            //starting outgoing call
-                            viewModel.StartOutgoingCall()
 
-                            //navigating to the screen
-                            navController.navigate(Screen.OutgoingCall.route)
+                            val permissionCheck = ContextCompat.checkSelfPermission(
+                                context, Manifest.permission.CALL_PHONE
+                            )
+                            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                                //starting outgoing call
+                                viewModel.StartOutgoingCall()
+
+                                // Already have permission, navigate to outgoing call screen
+                                navController.navigate(Screen.OutgoingCall.route)
+                            } else {
+                                // Asking for permission now
+                                callPermissionLauncher.launch(Manifest.permission.CALL_PHONE)
+                            }
                         }
                     },
                     containerColor = Color(0xFF4CAF50) // Material Green

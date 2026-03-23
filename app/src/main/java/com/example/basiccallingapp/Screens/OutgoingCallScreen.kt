@@ -1,9 +1,6 @@
 package com.example.basiccallingapp.Screens
 
 import android.content.Context
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,29 +31,12 @@ fun OutgoingCallScreen(navController: NavController, viewModel: CallViewModel) {
     val context: Context = LocalContext.current
 
 
-    // handling permissions
-    val callPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            if (isGranted) {
-                viewModel.initiateRealCall(context)
-            } else {
-                // Handling "Deny" edge case
-                Toast.makeText(context, "Call permission is required to dial", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-    )
-
-
-
 
     LaunchedEffect(Unit) {
         delay(1000) // Wait 1 seconds
 
         viewModel.startActiveCall(isReal = true)
-
-        callPermissionLauncher.launch(android.Manifest.permission.CALL_PHONE)
+        viewModel.initiateRealCall(context)
 
         navController.navigate(Screen.ActiveCall.route) {
             popUpTo(Screen.DialPad.route) // Remove 'Outgoing' from the backstack

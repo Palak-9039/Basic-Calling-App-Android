@@ -158,7 +158,7 @@ class CallViewModel : ViewModel() {
     fun autoResetAfterCall() {
         viewModelScope.launch {
             _toastEvent.emit("Call Ended")
-            delay(1500) // Give the user time to see the final duration
+            delay(2000) // Give the user time to see the final duration
             clearCallData()
         }
     }

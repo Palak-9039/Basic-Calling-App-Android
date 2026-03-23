@@ -39,10 +39,13 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.example.basiccallingapp.Navigation.Screen
 import com.example.basiccallingapp.Util.formatTime
 import com.example.basiccallingapp.Viewmodel.CallViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun ActiveCallScreen(
@@ -53,6 +56,8 @@ fun ActiveCallScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
+
+
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
@@ -60,16 +65,22 @@ fun ActiveCallScreen(
                 //only reset if it's returning from a real call
                 if (viewModel.isRealSimCall) {
 
-                    // The user has returned to the app (Call likely ended)
-                    // stop the timer and clear the data
-                    viewModel.stopTimerOnly()
 
-                    //to reset the data
-                    viewModel.autoResetAfterCall()
+                    lifecycleOwner.lifecycleScope.launch {
 
-                    //Navigating back to DialPad
-                    navController.navigate(Screen.DialPad.route) {
-                        popUpTo(Screen.DialPad.route){inclusive = true}
+                        delay(150) // A small buffer to let the UI settle
+
+                        viewModel.stopTimerOnly()
+                        viewModel.autoResetAfterCall()
+
+                        // handling the crash
+                        try {
+                            navController.navigate(Screen.DialPad.route) {
+                                popUpTo(Screen.DialPad.route) { inclusive = true }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                 }
 
@@ -106,7 +117,7 @@ fun ActiveCallScreen(
     ) {
         // Contact Info
         Text(
-            text = dialedNumber,
+            text = if (viewModel.isRealSimCall) dialedNumber else "9876543210",
             style = MaterialTheme.typography.headlineMedium,
             color = Color.White
         )
