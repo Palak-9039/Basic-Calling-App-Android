@@ -34,7 +34,7 @@ fun OutgoingCallScreen(navController: NavController, viewModel: CallViewModel) {
     val context: Context = LocalContext.current
 
 
-    // handeling permissions
+    // handling permissions
     val callPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
@@ -54,7 +54,7 @@ fun OutgoingCallScreen(navController: NavController, viewModel: CallViewModel) {
     LaunchedEffect(Unit) {
         delay(1000) // Wait 1 seconds
 
-        viewModel.startActiveCall() // Updating state to 'Active'
+        viewModel.startActiveCall(isReal = true)
 
         callPermissionLauncher.launch(android.Manifest.permission.CALL_PHONE)
 
@@ -62,7 +62,6 @@ fun OutgoingCallScreen(navController: NavController, viewModel: CallViewModel) {
             popUpTo(Screen.DialPad.route) // Remove 'Outgoing' from the backstack
         }
     }
-
 
 
     // Screen UI

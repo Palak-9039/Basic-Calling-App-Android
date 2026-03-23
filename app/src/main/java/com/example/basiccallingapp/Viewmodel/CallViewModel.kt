@@ -46,6 +46,9 @@ class CallViewModel : ViewModel() {
     private var _seconds = MutableStateFlow(0)
     var seconds = _seconds.asStateFlow()
 
+    // to check if the call is incoming simulation one or not
+    var isRealSimCall by mutableStateOf(false)
+
     // Logic for digit buttons
     fun onDigitClick(digit: String) {
         if (phoneNumber.length < 15) { // Basic limit for UI sanity
@@ -69,9 +72,13 @@ class CallViewModel : ViewModel() {
 
 
     //logic for startActiveCall
-    fun startActiveCall() {
+    fun startActiveCall(isReal: Boolean = false) {
 
-        _uiState.value = CallState.Active(0)
+        isRealSimCall = isReal // Setting the flag
+
+        //updating the state
+        _uiState.value = CallState.Active(phoneNumber)
+
         //reset any existing timer
         timerJob?.cancel()
         _seconds.value = 0
@@ -85,10 +92,13 @@ class CallViewModel : ViewModel() {
         }
     }
 
+    // to toggle mute button
     fun toggleMute() {
         isMuted = !isMuted
     }
 
+
+    //to toggle speaker button
     fun toggleSpeaker() {
         isSpeakerOn = !isSpeakerOn
     }

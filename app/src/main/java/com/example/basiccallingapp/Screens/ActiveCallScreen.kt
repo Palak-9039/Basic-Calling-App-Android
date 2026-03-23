@@ -56,18 +56,22 @@ fun ActiveCallScreen(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                // The user has returned to our app (Call likely ended)
-                // We stop the timer and clear the data
-                viewModel.stopTimerOnly()
 
-                //to reset the data
-                viewModel.autoResetAfterCall()
+                //only reset if it's returning from a real call
+                if (viewModel.isRealSimCall) {
 
-                //Navigating back to DialPad automatically
-                navController.navigate(Screen.DialPad.route) {
-                    popUpTo(Screen.DialPad.route)
+                    // The user has returned to our app (Call likely ended)
+                    // We stop the timer and clear the data
+                    viewModel.stopTimerOnly()
+
+                    //to reset the data
+                    viewModel.autoResetAfterCall()
+
+                    //Navigating back to DialPad automatically
+                    navController.navigate(Screen.DialPad.route) {
+                        popUpTo(Screen.DialPad.route){inclusive = true}
+                    }
                 }
-
 
             }
         }

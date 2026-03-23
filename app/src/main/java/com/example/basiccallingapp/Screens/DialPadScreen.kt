@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backspace
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.PhoneCallback
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -102,8 +103,16 @@ fun DialPadScreen(navController: NavController, viewModel: CallViewModel) {
                     Icon(Icons.Default.Call, contentDescription = "Call", tint = Color.White)
                 }
 
-                // Empty box for symmetry
-                Box(modifier = Modifier.size(48.dp))
+                // incoming call simulation button
+                IconButton(
+                    onClick = { navController.navigate(Screen.IncomingCall.route) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.PhoneCallback,
+                        contentDescription = "Simulate Incoming",
+                        tint = Color.Gray.copy(alpha = 0.5f)
+                    )
+                }
             }
         }
     }
