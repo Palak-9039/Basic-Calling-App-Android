@@ -163,8 +163,8 @@ fun ActiveCallScreen(
         FloatingActionButton(
             onClick = {
                 viewModel.endCall()
-                navController.navigate(Screen.DialPad.route) {
-                    popUpTo(Screen.DialPad.route) { inclusive = true }
+                navController.navigate(Screen.MainScreen.route) {
+                    popUpTo(Screen.MainScreen.route) { inclusive = true }
                 }
             },
             containerColor = Color.Red,

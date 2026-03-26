@@ -76,7 +76,7 @@ fun IncomingCallScreen(navController: NavController, viewModel: CallViewModel) {
                     //to start the timer from 00:00
                     viewModel.startActiveCall(isReal = false)
                     navController.navigate(Screen.ActiveCall.route) {
-                        popUpTo(Screen.DialPad.route)
+                        popUpTo(Screen.MainScreen.route)
                     }
                 },
                 containerColor = Color.Green,

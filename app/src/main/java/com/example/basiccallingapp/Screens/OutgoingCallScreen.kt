@@ -39,7 +39,7 @@ fun OutgoingCallScreen(navController: NavController, viewModel: CallViewModel) {
         viewModel.initiateRealCall(context)
 
         navController.navigate(Screen.ActiveCall.route) {
-            popUpTo(Screen.DialPad.route) // Remove 'Outgoing' from the backstack
+            popUpTo(Screen.MainScreen.route) // Remove 'Outgoing' from the backstack
         }
     }
 

@@ -3,26 +3,41 @@ package com.example.basiccallingapp.Navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.basiccallingapp.Repository.CallLogRepository
 import com.example.basiccallingapp.Screens.ActiveCallScreen
 import com.example.basiccallingapp.Screens.DialPadScreen
 import com.example.basiccallingapp.Screens.IncomingCallScreen
+import com.example.basiccallingapp.Screens.MainScreen
 import com.example.basiccallingapp.Screens.OutgoingCallScreen
+import com.example.basiccallingapp.Viewmodel.CallLogViewModel
 import com.example.basiccallingapp.Viewmodel.CallViewModel
 
 @Composable
 fun navigation() {
-
+    val context = LocalContext.current
     val navController = rememberNavController()
-    val viewmodel: CallViewModel = viewModel()
+
+    // callViewModel
+    val callViewmodel: CallViewModel = viewModel()
+
+    // Initialize the Repository manually
+    val callLogRepository = remember { CallLogRepository(context) }
+
+    // Use the Factory to create the CallLogViewModel
+    val callLogViewModel: CallLogViewModel = viewModel(
+        factory = CallLogViewModel.Factory(callLogRepository)
+    )
 
 
     NavHost(
         navController = navController,
-        startDestination = Screen.DialPad.route,
+        startDestination = Screen.MainScreen.route,
         //adding animation
         enterTransition = {
             slideIntoContainer(
@@ -50,17 +65,20 @@ fun navigation() {
         }
 
     ) {
+        composable(Screen.MainScreen.route){
+            MainScreen(navController,callViewmodel,callLogViewModel)
+        }
 
         composable(Screen.DialPad.route) {
-            DialPadScreen(navController, viewmodel)
+            DialPadScreen(navController, callViewmodel)
         }
 
         composable(Screen.OutgoingCall.route) {
-            OutgoingCallScreen(navController, viewmodel)
+            OutgoingCallScreen(navController, callViewmodel)
         }
 
         composable(Screen.ActiveCall.route) {
-            ActiveCallScreen(navController, viewmodel)
+            ActiveCallScreen(navController, callViewmodel)
         }
 
         composable(route = Screen.IncomingCall.route,
@@ -77,7 +95,7 @@ fun navigation() {
                 )
             }
         ) {
-            IncomingCallScreen(navController, viewmodel)
+            IncomingCallScreen(navController, callViewmodel)
         }
     }
 }

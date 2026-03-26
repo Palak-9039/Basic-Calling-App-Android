@@ -1,12 +1,15 @@
 package com.example.basiccallingapp.Viewmodel
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.basiccallingapp.model.CallState
@@ -160,6 +163,22 @@ class CallViewModel : ViewModel() {
             _toastEvent.emit("Call Ended")
             delay(2000) // Give the user time to see the final duration
             clearCallData()
+        }
+    }
+
+    // to make call by clicking on call log
+    fun onCallLogClick(number: String, context: Context) {
+        // Update the UI state with the number being called
+        phoneNumber = number
+
+        // Use Intent.ACTION_CALL for real calling functionality
+        val intent = Intent(Intent.ACTION_CALL).apply {
+            data = Uri.parse("tel:$number")
+        }
+
+        // Check permission one last time before launching to avoid crashes
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            context.startActivity(intent)
         }
     }
 
