@@ -56,7 +56,8 @@ fun DialPadScreen(navController: NavController, viewModel: CallViewModel) {
             viewModel.StartOutgoingCall()
             navController.navigate(Screen.OutgoingCall.route)
         } else {
-            Toast.makeText(context, "Permission denied. Cannot place call.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Permission denied. Cannot place call.", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -119,10 +120,7 @@ fun DialPadScreen(navController: NavController, viewModel: CallViewModel) {
                             )
                             if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                                 //starting outgoing call
-                                viewModel.StartOutgoingCall()
-
-                                // Already have permission, navigate to outgoing call screen
-                                navController.navigate(Screen.OutgoingCall.route)
+                                viewModel.placeRealCall(context, phoneNumber)
                             } else {
                                 // Asking for permission now
                                 callPermissionLauncher.launch(Manifest.permission.CALL_PHONE)

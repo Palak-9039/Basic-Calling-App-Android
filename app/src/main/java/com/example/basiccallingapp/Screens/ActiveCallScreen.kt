@@ -26,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,17 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.example.basiccallingapp.Navigation.Screen
+import com.example.basiccallingapp.Repository.CallManager
+import com.example.basiccallingapp.Repository.CallManager.activeCall
 import com.example.basiccallingapp.Util.formatTime
 import com.example.basiccallingapp.Viewmodel.CallViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun ActiveCallScreen(
@@ -54,56 +49,32 @@ fun ActiveCallScreen(
 ) {
 
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
+    val dialedNumber = viewModel.phoneNumber
 
 
+    val currentCall by activeCall.collectAsState()
+    val handle = currentCall?.details?.handle // This is a Uri like tel:1234567890
+    val displayNumber = handle?.schemeSpecificPart ?: ""
 
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-
-                //only reset if it's returning from a real call
-                if (viewModel.isRealSimCall) {
-
-
-                    lifecycleOwner.lifecycleScope.launch {
-
-                        delay(150) // A small buffer to let the UI settle
-
-                        viewModel.stopTimerOnly()
-                        viewModel.autoResetAfterCall()
-
-                        // handling the crash
-                        try {
-                            navController.navigate(Screen.DialPad.route) {
-                                popUpTo(Screen.DialPad.route) { inclusive = true }
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                }
-
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-
-
-// Listening for the events
+    // Listening for the events
     LaunchedEffect(Unit) {
         viewModel.toastEvent.collect { message ->
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
 
+    LaunchedEffect(currentCall) {
+        if (currentCall == null) {
+            navController.navigate(Screen.MainScreen.route) {
+                popUpTo(Screen.MainScreen.route) { inclusive = true }
+            }
+        } else {
+            viewModel.observeRealCall()
+        }
+    }
 
     // Collecting the ticking seconds from the ViewModel
     val seconds by viewModel.seconds.collectAsState()
-    val dialedNumber = viewModel.phoneNumber
 
 
     // screen UI
@@ -117,7 +88,7 @@ fun ActiveCallScreen(
     ) {
         // Contact Info
         Text(
-            text = if (viewModel.isRealSimCall) dialedNumber else "9876543210",
+            text = displayNumber.toString(),
             style = MaterialTheme.typography.headlineMedium,
             color = Color.White
         )
@@ -162,7 +133,9 @@ fun ActiveCallScreen(
         // End Call Button
         FloatingActionButton(
             onClick = {
-                viewModel.endCall()
+                // to end call
+                CallManager.disconnect()
+                // navigating back to the main screen
                 navController.navigate(Screen.MainScreen.route) {
                     popUpTo(Screen.MainScreen.route) { inclusive = true }
                 }

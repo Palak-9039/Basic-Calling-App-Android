@@ -35,8 +35,8 @@ fun OutgoingCallScreen(navController: NavController, viewModel: CallViewModel) {
     LaunchedEffect(Unit) {
         delay(1000) // Wait 1 seconds
 
-        viewModel.startActiveCall(isReal = true)
-        viewModel.initiateRealCall(context)
+//        viewModel.startActiveCall(isReal = true)
+//        viewModel.initiateRealCall(context)
 
         navController.navigate(Screen.ActiveCall.route) {
             popUpTo(Screen.MainScreen.route) // Remove 'Outgoing' from the backstack

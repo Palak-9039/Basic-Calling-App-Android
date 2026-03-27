@@ -4,7 +4,7 @@ import android.content.Context
 import android.provider.CallLog
 import com.example.basiccallingapp.model.CallLogEntry
 
-class CallLogRepository (private val context : Context) {
+class CallLogRepository(private val context: Context) {
     fun getCallLogs(): List<CallLogEntry> {
         val callLogList = mutableListOf<CallLogEntry>()
 

@@ -57,23 +57,22 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
-                MyBottomBar(  // Passing the state and the logic down to the bar
-                    selectedTab = selectedTab,
-                    onTabSelected = { index ->
-                        selectedTab = index
-                        if (index == 1) callLogViewModel.loadCallLogs()
-                    }
-                )
-            }
+            MyBottomBar(  // Passing the state and the logic down to the bar
+                selectedTab = selectedTab,
+                onTabSelected = { index ->
+                    selectedTab = index
+                    if (index == 1) callLogViewModel.loadCallLogs()
+                }
+            )
+        }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            // Your Navigation Host will go here
             // Switch between screens based on the selected tab
             when (selectedTab) {
                 0 -> DialPadScreen(navController, callViewModel)
                 1 -> CallLogScreen(callLogViewModel) { phoneNumber ->
                     // Logic to place real call from logs
-                    callViewModel.onCallLogClick(phoneNumber, context)
+                    callViewModel.placeRealCall(context, phoneNumber)
                 }
             }
         }
@@ -81,25 +80,23 @@ fun MainScreen(
 }
 
 
-
-    @Composable
-    fun MyBottomBar(
-        selectedTab : Int,
-        onTabSelected: (Int) -> Unit
-    ) {
-        NavigationBar {
-//            var selectedTab = null
-            NavigationBarItem(
-                selected = selectedTab == 0,
-                onClick = { onTabSelected(0)},
-                label = { Text("Dialer") },
-                icon = { Icon(Icons.Default.Dialpad, contentDescription = "Dialer") }
-            )
-            NavigationBarItem(
-                selected = selectedTab == 1,
-                onClick = {onTabSelected(1) },
-                label = { Text("History") },
-                icon = { Icon(Icons.Default.History, contentDescription = "Call Logs") }
-            )
-        }
+@Composable
+fun MyBottomBar(
+    selectedTab: Int,
+    onTabSelected: (Int) -> Unit
+) {
+    NavigationBar {
+        NavigationBarItem(
+            selected = selectedTab == 0,
+            onClick = { onTabSelected(0) },
+            label = { Text("Dialer") },
+            icon = { Icon(Icons.Default.Dialpad, contentDescription = "Dialer") }
+        )
+        NavigationBarItem(
+            selected = selectedTab == 1,
+            onClick = { onTabSelected(1) },
+            label = { Text("History") },
+            icon = { Icon(Icons.Default.History, contentDescription = "Call Logs") }
+        )
     }
+}

@@ -1,17 +1,15 @@
 package com.example.basiccallingapp.Viewmodel
 
-import android.Manifest
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.widget.Toast
+import android.os.Bundle
+import android.telecom.TelecomManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.basiccallingapp.Repository.CallManager
 import com.example.basiccallingapp.model.CallState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -74,27 +72,6 @@ class CallViewModel : ViewModel() {
     }
 
 
-    //logic for startActiveCall
-    fun startActiveCall(isReal: Boolean = false) {
-
-        isRealSimCall = isReal // Setting the flag
-
-        //updating the state
-        _uiState.value = CallState.Active(phoneNumber)
-
-        //reset any existing timer
-        timerJob?.cancel()
-        _seconds.value = 0
-
-        //the ticking logic
-        timerJob = viewModelScope.launch {
-            while (isActive) { //checking if the coroutine is still active
-                delay(1000) //wait for 1 second
-                _seconds.value += 1
-            }
-        }
-    }
-
     // to toggle mute button
     fun toggleMute() {
         isMuted = !isMuted
@@ -105,36 +82,6 @@ class CallViewModel : ViewModel() {
     fun toggleSpeaker() {
         isSpeakerOn = !isSpeakerOn
     }
-
-    //logic for making calls from sim
-    fun initiateRealCall(context: Context) {
-        val number = phoneNumber // The string the user typed in the DialPad
-        if (number.isNotEmpty()) {
-            val intent = Intent(Intent.ACTION_CALL).apply {
-                data = Uri.parse("tel:$number")
-                // This flag is needed because we are starting the activity from a non-activity context (ViewModel)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-
-            // Final safety check: ensuring the permission is actually granted before firing
-            if (intent.resolveActivity(context.packageManager) != null) {
-                try {
-                    context.startActivity(intent)
-                } catch (e: SecurityException) {
-                    e.printStackTrace()
-                }
-            } else {
-                // Edge Case: Device has no calling hardware or dialer app
-                Toast.makeText(
-                    context,
-                    "No calling application found on this device",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-
-        }
-    }
-
 
     // Private helper to avoid repeating yourself
     private fun clearCallData() {
@@ -148,37 +95,60 @@ class CallViewModel : ViewModel() {
     fun stopTimerOnly() {
         timerJob?.cancel()
         timerJob = null
-    }
-
-    fun endCall() {
         clearCallData()
-        viewModelScope.launch {
-            _toastEvent.emit("Call Ended")
+    }
+
+
+    // to make real phone call
+    fun placeRealCall(context: Context, phoneNumber: String) {
+        val telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+        val uri = Uri.fromParts("tel", phoneNumber, null)
+
+        val extras = Bundle().apply {
+            putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, false)
+        }
+
+        try {
+            // This tells the system: "I'm the dialer, let me handle this"
+            telecomManager.placeCall(uri, extras)
+        } catch (e: SecurityException) {
+            // Handle permission error
         }
     }
 
-    // Special function for the Auto-Return
-    fun autoResetAfterCall() {
-        viewModelScope.launch {
-            _toastEvent.emit("Call Ended")
-            delay(2000) // Give the user time to see the final duration
-            clearCallData()
+    fun startTimer() {
+//       reset any existing timer
+        timerJob?.cancel()
+        _seconds.value = 0
+
+        //the ticking logic
+        timerJob = viewModelScope.launch {
+            while (isActive) { //checking if the coroutine is still active
+                delay(1000) //wait for 1 second
+                _seconds.value += 1
+            }
         }
     }
 
-    // to make call by clicking on call log
-    fun onCallLogClick(number: String, context: Context) {
-        // Update the UI state with the number being called
-        phoneNumber = number
+    // to get the real call seconds for active call screen
+    fun observeRealCall() {
+        viewModelScope.launch {
+            CallManager.activeCall.collect { call ->
+                if (call != null) {
+                    // Listening for state changes
+                    call.registerCallback(object : android.telecom.Call.Callback() {
+                        override fun onStateChanged(call: android.telecom.Call, state: Int) {
+                            if (state == android.telecom.Call.STATE_ACTIVE) {
+                                startTimer() // Only starts when connected
+                            }
+                        }
+                    })
 
-        // Use Intent.ACTION_CALL for real calling functionality
-        val intent = Intent(Intent.ACTION_CALL).apply {
-            data = Uri.parse("tel:$number")
-        }
-
-        // Check permission one last time before launching to avoid crashes
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-            context.startActivity(intent)
+                } else {
+                    // Call ended: Stop timer and refresh logs
+                    stopTimerOnly()
+                }
+            }
         }
     }
 

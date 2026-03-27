@@ -74,10 +74,10 @@ fun IncomingCallScreen(navController: NavController, viewModel: CallViewModel) {
             FloatingActionButton(
                 onClick = {
                     //to start the timer from 00:00
-                    viewModel.startActiveCall(isReal = false)
-                    navController.navigate(Screen.ActiveCall.route) {
-                        popUpTo(Screen.MainScreen.route)
-                    }
+////                    viewModel.startActiveCall(isReal = false)
+//                    navController.navigate(Screen.ActiveCall.route) {
+//                        popUpTo(Screen.MainScreen.route)
+//                    }
                 },
                 containerColor = Color.Green,
                 shape = CircleShape

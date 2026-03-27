@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CallLogViewModel(private val repository : CallLogRepository) : ViewModel() {
+class CallLogViewModel(private val repository: CallLogRepository) : ViewModel() {
     private val _callLogs = MutableStateFlow<List<CallLogEntry>>(emptyList())
     val callLogs = _callLogs.asStateFlow()
 

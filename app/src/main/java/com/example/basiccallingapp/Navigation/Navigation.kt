@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,9 +21,8 @@ import com.example.basiccallingapp.Viewmodel.CallLogViewModel
 import com.example.basiccallingapp.Viewmodel.CallViewModel
 
 @Composable
-fun navigation() {
+fun navigation(navController : NavHostController) {
     val context = LocalContext.current
-    val navController = rememberNavController()
 
     // callViewModel
     val callViewmodel: CallViewModel = viewModel()

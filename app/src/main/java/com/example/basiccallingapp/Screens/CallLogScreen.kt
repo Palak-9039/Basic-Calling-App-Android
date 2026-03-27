@@ -48,8 +48,8 @@ fun CallLogItem(log: CallLogEntry, onCallClick: (String) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onCallClick(log.number) }
-    .padding(16.dp),
-    verticalAlignment = Alignment.CenterVertically
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(text = log.name ?: "Unknown", style = MaterialTheme.typography.titleMedium)
