@@ -61,8 +61,8 @@ fun IncomingCallScreen(navController: NavController, viewModel: CallViewModel) {
             // Reject Button
             FloatingActionButton(
                 onClick = {
-                    viewModel.endCall()
-                    navController.popBackStack()
+//                    viewModel.endCall()
+//                    navController.popBackStack()
                 },
                 containerColor = Color.Red,
                 shape = CircleShape

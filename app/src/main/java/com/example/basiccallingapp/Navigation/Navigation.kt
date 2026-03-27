@@ -6,12 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.basiccallingapp.Repository.CallLogRepository
+import com.example.basiccallingapp.Repository.ContactsRepository
 import com.example.basiccallingapp.Screens.ActiveCallScreen
 import com.example.basiccallingapp.Screens.DialPadScreen
 import com.example.basiccallingapp.Screens.IncomingCallScreen
@@ -19,9 +18,10 @@ import com.example.basiccallingapp.Screens.MainScreen
 import com.example.basiccallingapp.Screens.OutgoingCallScreen
 import com.example.basiccallingapp.Viewmodel.CallLogViewModel
 import com.example.basiccallingapp.Viewmodel.CallViewModel
+import com.example.basiccallingapp.Viewmodel.ContactsViewModel
 
 @Composable
-fun navigation(navController : NavHostController) {
+fun navigation(navController: NavHostController) {
     val context = LocalContext.current
 
     // callViewModel
@@ -35,6 +35,10 @@ fun navigation(navController : NavHostController) {
         factory = CallLogViewModel.Factory(callLogRepository)
     )
 
+    val contactsRepository = remember { ContactsRepository(context) }
+    val contactsViewModel: ContactsViewModel = viewModel(
+        factory = ContactsViewModel.Factory(contactsRepository)
+    )
 
     NavHost(
         navController = navController,
@@ -66,8 +70,8 @@ fun navigation(navController : NavHostController) {
         }
 
     ) {
-        composable(Screen.MainScreen.route){
-            MainScreen(navController,callViewmodel,callLogViewModel)
+        composable(Screen.MainScreen.route) {
+            MainScreen(navController, callViewmodel, callLogViewModel, contactsViewModel)
         }
 
         composable(Screen.DialPad.route) {

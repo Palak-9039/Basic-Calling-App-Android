@@ -67,8 +67,8 @@ fun OutgoingCallScreen(navController: NavController, viewModel: CallViewModel) {
         // End Call Button
         FloatingActionButton(
             onClick = {
-                viewModel.endCall()
-                navController.popBackStack()
+//                viewModel.endCall()
+//                navController.popBackStack()
             },
             containerColor = Color.Red
         ) {

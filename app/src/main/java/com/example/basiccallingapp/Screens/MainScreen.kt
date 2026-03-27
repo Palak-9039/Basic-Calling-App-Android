@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Dialpad
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Icon
@@ -24,12 +25,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.basiccallingapp.Viewmodel.CallLogViewModel
 import com.example.basiccallingapp.Viewmodel.CallViewModel
+import com.example.basiccallingapp.Viewmodel.ContactsViewModel
 
 @Composable
 fun MainScreen(
     navController: NavController,
     callViewModel: CallViewModel,
-    callLogViewModel: CallLogViewModel
+    callLogViewModel: CallLogViewModel,
+    contactsViewModel: ContactsViewModel
 ) {
 
     var selectedTab by remember { mutableIntStateOf(0) }
@@ -62,6 +65,7 @@ fun MainScreen(
                 onTabSelected = { index ->
                     selectedTab = index
                     if (index == 1) callLogViewModel.loadCallLogs()
+                    if (index == 2) contactsViewModel.loadContacts()
                 }
             )
         }
@@ -74,6 +78,11 @@ fun MainScreen(
                     // Logic to place real call from logs
                     callViewModel.placeRealCall(context, phoneNumber)
                 }
+
+                2 -> ContactsScreen(contactsViewModel) { phoneNumber ->
+                    // Logic to place real call from logs
+                    callViewModel.placeRealCall(context, phoneNumber)
+                }
             }
         }
     }
@@ -83,7 +92,7 @@ fun MainScreen(
 @Composable
 fun MyBottomBar(
     selectedTab: Int,
-    onTabSelected: (Int) -> Unit
+    onTabSelected: (Int) -> Unit,
 ) {
     NavigationBar {
         NavigationBarItem(
@@ -97,6 +106,12 @@ fun MyBottomBar(
             onClick = { onTabSelected(1) },
             label = { Text("History") },
             icon = { Icon(Icons.Default.History, contentDescription = "Call Logs") }
+        )
+        NavigationBarItem(
+            selected = selectedTab == 2,
+            onClick = { onTabSelected(2) },
+            label = { Text("Contacts") },
+            icon = { Icon(Icons.Default.Contacts, contentDescription = "Contacts") }
         )
     }
 }

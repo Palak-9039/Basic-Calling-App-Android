@@ -6,4 +6,5 @@ package com.example.basiccallingapp.Navigation
         object OutgoingCall : Screen("outgoing_call")
         object IncomingCall : Screen("incoming_call")
         object ActiveCall : Screen("active_call")
+        object ContactsScreen : Screen("contacts")
     }
