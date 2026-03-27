@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.CallEnd
 import androidx.compose.material.icons.filled.Dialpad
 import androidx.compose.material.icons.filled.Mic
@@ -61,6 +62,7 @@ fun ActiveCallScreen(
     //  Observing the real-time state of the call
     val callState = currentCall?.state ?: Call.STATE_DISCONNECTED
 
+
     // Listening for the events
     LaunchedEffect(Unit) {
         viewModel.toastEvent.collect { message ->
@@ -74,6 +76,13 @@ fun ActiveCallScreen(
                 popUpTo(Screen.MainScreen.route) { inclusive = true }
             }
         } else {
+            viewModel.observeRealCall()
+        }
+    }
+
+    LaunchedEffect(callState) {
+        if (callState == Call.STATE_ACTIVE) {
+            // Force the ViewModel to start the timer because the call is now live
             viewModel.observeRealCall()
         }
     }
@@ -99,6 +108,7 @@ fun ActiveCallScreen(
             color = Color.White
         )
 
+
         // If we showed the name above, show the number small underneath
         if (contactName != null) {
             Text(
@@ -107,15 +117,54 @@ fun ActiveCallScreen(
                 color = Color.White.copy(alpha = 0.6f)
             )
         }
-        // to show "Calling..." until connected (STATE_ACTIVE)
-        Text(
-            text = if (callState == Call.STATE_ACTIVE) formatTime(seconds) else "Calling...",
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.White.copy(alpha = 0.9f),
-            modifier = Modifier.padding(vertical = 32.dp)
-        )
 
-        Spacer(modifier = Modifier.height(48.dp))
+        //for incoming calls
+        if(callState == Call.STATE_RINGING) {
+            // to show "Calling..." until connected
+            Text(
+                text = if (seconds > 0) formatTime(seconds) else "Ringing...",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White.copy(alpha = 0.9f),
+                modifier = Modifier.padding(vertical = 32.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Decline Button
+                FloatingActionButton(
+                    onClick = { CallManager.disconnect() },
+                    containerColor = Color.Red,
+                    shape = CircleShape
+                ) {
+                    Icon(Icons.Default.CallEnd, contentDescription = "Decline", tint = Color.White)
+                }
+
+                // Accept Button
+                FloatingActionButton(
+                    onClick = {
+                        // Answers the real hardware line
+                        currentCall?.answer(android.telecom.VideoProfile.STATE_AUDIO_ONLY)
+                    },
+                    containerColor = Color.Green,
+                    shape = CircleShape
+                ) {
+                    Icon(Icons.Default.Call, contentDescription = "Accept", tint = Color.White)
+                }
+            }
+        } else {
+            // to show "Calling..." until connected
+            Text(
+                text = if (seconds > 0) formatTime(seconds) else "calling...",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White.copy(alpha = 0.9f),
+                modifier = Modifier.padding(vertical = 32.dp)
+            )
+
+
+            Spacer(modifier = Modifier.height(48.dp))
 
 
         // UI Toggles
@@ -165,6 +214,7 @@ fun ActiveCallScreen(
                 modifier = Modifier.size(32.dp)
             )
         }
+    }
     }
 }
 
