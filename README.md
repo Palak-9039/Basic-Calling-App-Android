@@ -2,9 +2,10 @@
 
 ##  App Preview
 <p align="center">
-  <img src="screenshots/dialer.jpeg" width="30%" />
-  <img src="screenshots/active.jpeg" width="30%" />
-  <img src="screenshots/incoming.jpeg" width="30%" />
+  <img src="screenshots/dialpad.jpeg" width="24%" />
+  <img src="screenshots/contacts.jpeg" width="24%" />
+  <img src="screenshots/call_logs.jpeg" width="24%" />
+  <img src="screenshots/active_call.jpeg" width="24%" />
 </p>
 
 
