@@ -16,8 +16,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.basiccallingapp.Viewmodel.ContactsViewModel
-import com.example.basiccallingapp.model.ContactEntry
+import com.example.basiccallingapp.Viewmodels.ContactsViewModel
+import com.example.basiccallingapp.models.ContactEntry
 
 @Composable
 fun ContactsScreen(

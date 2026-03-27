@@ -1,4 +1,4 @@
-package com.example.basiccallingapp.Viewmodel
+package com.example.basiccallingapp.Viewmodels
 
 import android.content.Context
 import android.net.Uri
@@ -9,8 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.basiccallingapp.Repository.CallManager
-import com.example.basiccallingapp.model.CallState
+import com.example.basiccallingapp.Repositories.CallManager
+import com.example.basiccallingapp.models.CallState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow

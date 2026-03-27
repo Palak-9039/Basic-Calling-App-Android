@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.basiccallingapp.Navigation.Screen
-import com.example.basiccallingapp.Viewmodel.CallViewModel
+import com.example.basiccallingapp.Viewmodels.CallViewModel
 import kotlinx.coroutines.delay
 
 @Composable

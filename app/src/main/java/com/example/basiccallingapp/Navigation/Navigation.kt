@@ -9,16 +9,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.basiccallingapp.Repository.CallLogRepository
-import com.example.basiccallingapp.Repository.ContactsRepository
+import com.example.basiccallingapp.Repositories.CallLogRepository
+import com.example.basiccallingapp.Repositories.ContactsRepository
 import com.example.basiccallingapp.Screens.ActiveCallScreen
 import com.example.basiccallingapp.Screens.DialPadScreen
 import com.example.basiccallingapp.Screens.IncomingCallScreen
 import com.example.basiccallingapp.Screens.MainScreen
 import com.example.basiccallingapp.Screens.OutgoingCallScreen
-import com.example.basiccallingapp.Viewmodel.CallLogViewModel
-import com.example.basiccallingapp.Viewmodel.CallViewModel
-import com.example.basiccallingapp.Viewmodel.ContactsViewModel
+import com.example.basiccallingapp.Viewmodels.CallLogViewModel
+import com.example.basiccallingapp.Viewmodels.CallViewModel
+import com.example.basiccallingapp.Viewmodels.ContactsViewModel
 
 @Composable
 fun navigation(navController: NavHostController) {

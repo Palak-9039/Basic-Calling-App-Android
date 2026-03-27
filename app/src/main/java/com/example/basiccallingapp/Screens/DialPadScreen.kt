@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.example.basiccallingapp.Navigation.Screen
-import com.example.basiccallingapp.Viewmodel.CallViewModel
+import com.example.basiccallingapp.Viewmodels.CallViewModel
 
 
 @Composable

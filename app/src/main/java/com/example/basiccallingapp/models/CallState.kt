@@ -1,4 +1,4 @@
-package com.example.basiccallingapp.model
+package com.example.basiccallingapp.models
 
 sealed class CallState {
     data object Idle : CallState()

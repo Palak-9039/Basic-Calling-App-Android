@@ -4,7 +4,7 @@ import android.content.Intent
 import android.telecom.Call
 import android.telecom.InCallService
 import com.example.basiccallingapp.MainActivity
-import com.example.basiccallingapp.Repository.CallManager
+import com.example.basiccallingapp.Repositories.CallManager
 
 class MyInCallService : InCallService() {
     override fun onCallAdded(call: Call?) {

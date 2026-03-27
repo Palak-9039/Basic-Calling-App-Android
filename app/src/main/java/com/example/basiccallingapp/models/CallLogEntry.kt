@@ -1,4 +1,4 @@
-package com.example.basiccallingapp.model
+package com.example.basiccallingapp.models
 
 data class CallLogEntry (
     val name: String?,       // Contact name

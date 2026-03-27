@@ -37,10 +37,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.basiccallingapp.Navigation.Screen
-import com.example.basiccallingapp.Repository.CallManager
-import com.example.basiccallingapp.Repository.CallManager.activeCall
+import com.example.basiccallingapp.Repositories.CallManager
+import com.example.basiccallingapp.Repositories.CallManager.activeCall
 import com.example.basiccallingapp.Util.formatTime
-import com.example.basiccallingapp.Viewmodel.CallViewModel
+import com.example.basiccallingapp.Viewmodels.CallViewModel
 
 @Composable
 fun ActiveCallScreen(

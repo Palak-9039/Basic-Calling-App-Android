@@ -23,9 +23,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.example.basiccallingapp.Viewmodel.CallLogViewModel
-import com.example.basiccallingapp.Viewmodel.CallViewModel
-import com.example.basiccallingapp.Viewmodel.ContactsViewModel
+import com.example.basiccallingapp.Viewmodels.CallLogViewModel
+import com.example.basiccallingapp.Viewmodels.CallViewModel
+import com.example.basiccallingapp.Viewmodels.ContactsViewModel
 
 @Composable
 fun MainScreen(

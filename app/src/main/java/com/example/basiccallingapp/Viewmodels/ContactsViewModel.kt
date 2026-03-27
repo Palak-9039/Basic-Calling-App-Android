@@ -1,10 +1,10 @@
-package com.example.basiccallingapp.Viewmodel
+package com.example.basiccallingapp.Viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.basiccallingapp.Repository.ContactsRepository
-import com.example.basiccallingapp.model.ContactEntry
+import com.example.basiccallingapp.Repositories.ContactsRepository
+import com.example.basiccallingapp.models.ContactEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

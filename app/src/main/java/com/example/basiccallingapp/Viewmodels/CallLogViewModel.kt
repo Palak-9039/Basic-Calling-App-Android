@@ -1,10 +1,10 @@
-package com.example.basiccallingapp.Viewmodel
+package com.example.basiccallingapp.Viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.basiccallingapp.Repository.CallLogRepository
-import com.example.basiccallingapp.model.CallLogEntry
+import com.example.basiccallingapp.Repositories.CallLogRepository
+import com.example.basiccallingapp.models.CallLogEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

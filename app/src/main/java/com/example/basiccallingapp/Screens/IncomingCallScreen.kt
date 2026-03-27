@@ -23,8 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.basiccallingapp.Navigation.Screen
-import com.example.basiccallingapp.Viewmodel.CallViewModel
+import com.example.basiccallingapp.Viewmodels.CallViewModel
 
 @Composable
 fun IncomingCallScreen(navController: NavController, viewModel: CallViewModel) {

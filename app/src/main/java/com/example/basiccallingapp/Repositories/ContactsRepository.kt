@@ -1,8 +1,8 @@
-package com.example.basiccallingapp.Repository
+package com.example.basiccallingapp.Repositories
 
 import android.content.Context
 import android.provider.ContactsContract
-import com.example.basiccallingapp.model.ContactEntry
+import com.example.basiccallingapp.models.ContactEntry
 
 class ContactsRepository(private val context: Context) {
 
