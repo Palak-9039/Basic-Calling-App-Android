@@ -47,8 +47,6 @@ class CallViewModel : ViewModel() {
     private var _seconds = MutableStateFlow(0)
     var seconds = _seconds.asStateFlow()
 
-    // to check if the call is incoming simulation one or not
-    var isRealSimCall by mutableStateOf(false)
 
     // Logic for digit buttons
     fun onDigitClick(digit: String) {

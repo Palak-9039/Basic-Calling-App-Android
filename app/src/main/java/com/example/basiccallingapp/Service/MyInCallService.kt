@@ -5,6 +5,7 @@ import android.telecom.Call
 import android.telecom.InCallService
 import com.example.basiccallingapp.MainActivity
 import com.example.basiccallingapp.Repositories.CallManager
+import com.example.basiccallingapp.Repositories.ContactsRepository
 
 class MyInCallService : InCallService() {
     override fun onCallAdded(call: Call?) {
@@ -21,6 +22,14 @@ class MyInCallService : InCallService() {
             putExtra("SHOW_ACTIVE_CALL", true)
         }
         startActivity(intent)
+
+        // Perform lookup using the Repository
+        val repository = ContactsRepository(this)
+        val number = call?.details?.handle?.schemeSpecificPart ?: ""
+        val name = repository.getContactNameByNumber(number)
+        // Saving to Manager so ActiveCallScreen can see it
+        CallManager.updateContactName(name)
+
 
     }
 

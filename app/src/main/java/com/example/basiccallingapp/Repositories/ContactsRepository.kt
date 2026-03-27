@@ -1,6 +1,7 @@
 package com.example.basiccallingapp.Repositories
 
 import android.content.Context
+import android.net.Uri
 import android.provider.ContactsContract
 import com.example.basiccallingapp.models.ContactEntry
 
@@ -33,5 +34,21 @@ class ContactsRepository(private val context: Context) {
             }
         }
         return contactList
+    }
+
+    // to get the name of contact to display
+    fun getContactNameByNumber(number: String): String? {
+        val uri = Uri.withAppendedPath(
+            ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+            Uri.encode(number)
+        )
+        val projection = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME)
+
+        context.contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                return cursor.getString(0)
+            }
+        }
+        return null
     }
 }

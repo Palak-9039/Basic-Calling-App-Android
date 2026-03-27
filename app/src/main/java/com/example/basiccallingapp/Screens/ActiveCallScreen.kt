@@ -1,5 +1,6 @@
 package com.example.basiccallingapp.Screens
 
+import android.telecom.Call
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,12 +50,16 @@ fun ActiveCallScreen(
 ) {
 
     val context = LocalContext.current
-    val dialedNumber = viewModel.phoneNumber
 
 
+    val contactName by CallManager.contactName.collectAsState()
     val currentCall by activeCall.collectAsState()
     val handle = currentCall?.details?.handle // This is a Uri like tel:1234567890
-    val displayNumber = handle?.schemeSpecificPart ?: ""
+    val displayNumber = handle?.schemeSpecificPart ?: viewModel.phoneNumber
+
+
+    //  Observing the real-time state of the call
+    val callState = currentCall?.state ?: Call.STATE_DISCONNECTED
 
     // Listening for the events
     LaunchedEffect(Unit) {
@@ -86,22 +91,32 @@ fun ActiveCallScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Contact Info
+
+        // Display Name if found, otherwise showing Number
         Text(
-            text = displayNumber.toString(),
+            text = contactName ?: displayNumber,
             style = MaterialTheme.typography.headlineMedium,
             color = Color.White
         )
 
-        // Timer display
+        // If we showed the name above, show the number small underneath
+        if (contactName != null) {
+            Text(
+                text = displayNumber,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White.copy(alpha = 0.6f)
+            )
+        }
+        // to show "Calling..." until connected (STATE_ACTIVE)
         Text(
-            text = formatTime(seconds),
-            style = MaterialTheme.typography.displayLarge,
+            text = if (callState == Call.STATE_ACTIVE) formatTime(seconds) else "Calling...",
+            style = MaterialTheme.typography.bodySmall,
             color = Color.White.copy(alpha = 0.9f),
             modifier = Modifier.padding(vertical = 32.dp)
         )
 
         Spacer(modifier = Modifier.height(48.dp))
+
 
         // UI Toggles
         Row(

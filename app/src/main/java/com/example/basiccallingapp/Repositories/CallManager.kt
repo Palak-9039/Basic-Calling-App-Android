@@ -9,6 +9,13 @@ object CallManager {
     private val _activeCall = MutableStateFlow<Call?>(null)
     val activeCall = _activeCall.asStateFlow()
 
+    private val _contactName = MutableStateFlow<String?>(null)
+    val contactName = _contactName.asStateFlow()
+
+    fun updateContactName(name: String?) {
+        _contactName.value = name
+    }
+
     fun updateCall(call: Call?) {
         _activeCall.value = call
     }
